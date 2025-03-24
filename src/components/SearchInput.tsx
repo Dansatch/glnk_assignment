@@ -5,10 +5,17 @@ import { floatingStyles } from "../styles";
 interface Props {
   placeholder: string;
   prompt: string;
+  readOnly?: boolean;
   setPrompt: (targetValue: string) => void;
   handleSubmit: () => void;
 }
-function SearchInput({ placeholder, prompt, setPrompt, handleSubmit }: Props) {
+function SearchInput({
+  placeholder,
+  prompt,
+  setPrompt,
+  handleSubmit,
+  readOnly = false,
+}: Props) {
   return (
     <Field.Root>
       <Box
@@ -23,16 +30,23 @@ function SearchInput({ placeholder, prompt, setPrompt, handleSubmit }: Props) {
         <Input
           className="peer"
           placeholder=""
-          value={prompt}
+          // value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
+          disabled={readOnly}
         />
-        <Field.Label css={floatingStyles}>{placeholder}</Field.Label>
+        <Field.Label
+          css={floatingStyles}
+          visibility={readOnly ? "hidden" : "visible"}
+        >
+          {placeholder}
+        </Field.Label>
         <Button
           border="none"
           variant="solid"
           size="sm"
           onClick={() => handleSubmit()}
           disabled={!prompt}
+          display={readOnly ? "none" : "flex"}
         >
           <FaArrowUp />
         </Button>

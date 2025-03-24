@@ -1,52 +1,68 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SearchInput from "./components/SearchInput";
 import ListCards from "./components/ListCards";
 import useSearchResults from "./hooks/useSearchResults";
 
+const MotionGridItem = motion(GridItem);
+
 function App() {
   const [searchPrompt, setSearchPrompt] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { data, loading, error } = useSearchResults(searchPrompt);
-  
+  const resultReady = searchPrompt[0] && submitted;
+
   useEffect(() => {
-    console.log(data?.results);
-  }, [submitted && searchPrompt])
+    if(!searchPrompt[0]){
+      setSubmitted(false);
+    }
+  }, [resultReady]);
 
   return (
-    <Box
-      minHeight="100vh"
-      minWidth={"100vw"}
-      border={"2px solid green"}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <motion.div
-        initial={{ y: "50%", opacity: 1 }}
-        animate={submitted ? { y: "-40vh", left: "5%", scale: 0.9 } : { y: "50%", x: "0%" }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        style={{ position: "absolute", width: "100%", maxWidth: "400px"}}
+    <>
+      <Grid
+        h="100vh"
+        templateRows="repeat(7, 1fr)"
+        // templateColumns="repeat(5, 1fr)"
+        // gap={4}
+        display={"grid"}
       >
-        {/* Search prompt */}
-        <SearchInput placeholder="What can I find for you today?" prompt={searchPrompt} handleSubmit={() => setSubmitted(true)} setPrompt={setSearchPrompt} />
-        
-        {/* Results Section */}
-        {submitted && (
-          <motion.div
-            initial={{ opacity: 0, y: "80%" }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ease:"anticipate", delay: 0.1, duration: 1.5 }}
-            style={{ position: "absolute", marginTop: "10px"}}
-          >
-            <ListCards data={data?.results}/>
-          </motion.div>
+        <MotionGridItem
+          rowSpan={7}
+          display={"flex"}
+          alignItems={"center"}
+          animate={{ height: resultReady ? "14.28vh" : "100vh" }} // Adjusted height per row
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <SearchInput
+            placeholder="What can I find for you today?"
+            readOnly={!!resultReady}
+            prompt={searchPrompt}
+            handleSubmit={() => setSubmitted(true)}
+            setPrompt={setSearchPrompt}
+          />
+        </MotionGridItem>
 
+        <MotionGridItem
+          rowSpan={0}
+          display={resultReady ? "flex" : "none"}
+          animate={{ height: resultReady ? "71.4vh" : "0vh" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <ListCards data={data?.results} />
+        </MotionGridItem>
 
-        )}
-      </motion.div>
-    </Box>
+        <MotionGridItem
+          rowSpan={0}
+          display={resultReady ? "flex" : "none"}
+          animate={{ height: resultReady ? "14.28vh" : "0vh" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+           <SearchInput placeholder="Refine your search?" prompt={searchPrompt} handleSubmit={() => setSubmitted(true)} setPrompt={setSearchPrompt} />
+        </MotionGridItem>
+      </Grid>
+    </>
   );
 }
 

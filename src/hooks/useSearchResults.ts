@@ -37,7 +37,7 @@ const useSearchResults = (query: string) => {
 
           setData({
             query: query,
-            results: filteredResults,
+            results: filteredResults.slice(0, 6), //limit results
             suggestions: mockData.suggestions,
           });
           setLoading(false);
