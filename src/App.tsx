@@ -1,15 +1,18 @@
 import { Box } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import SearchPrompt from "./components/SearchPrompt";
+import SearchInput from "./components/SearchInput";
 import ListCards from "./components/ListCards";
+import useSearchResults from "./hooks/useSearchResults";
 
 function App() {
+  const [searchPrompt, setSearchPrompt] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = () => {
-    setSubmitted(true);
-  };
+  const { data, loading, error } = useSearchResults(searchPrompt);
+  
+  useEffect(() => {
+    console.log(data?.results);
+  }, [submitted && searchPrompt])
 
   return (
     <Box
@@ -27,7 +30,7 @@ function App() {
         style={{ position: "absolute", width: "100%", maxWidth: "400px"}}
       >
         {/* Search prompt */}
-        <SearchPrompt placeholder="What can I find for you today?" handleSubmit={handleSubmit} />
+        <SearchInput placeholder="What can I find for you today?" prompt={searchPrompt} handleSubmit={() => setSubmitted(true)} setPrompt={setSearchPrompt} />
         
         {/* Results Section */}
         {submitted && (
@@ -35,10 +38,12 @@ function App() {
             initial={{ opacity: 0, y: "80%" }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ease:"anticipate", delay: 0.1, duration: 1.5 }}
-            style={{ position: "absolute", marginTop: "10px" }}
+            style={{ position: "absolute", marginTop: "10px"}}
           >
-            <ListCards/>
+            <ListCards data={data?.results}/>
           </motion.div>
+
+
         )}
       </motion.div>
     </Box>

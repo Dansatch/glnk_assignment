@@ -1,19 +1,14 @@
 import { Box, Button, Field, Input } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaArrowUp } from "react-icons/fa6";
 import { floatingStyles } from "../styles";
 
 interface Props {
   placeholder: string;
+  prompt: string;
+  setPrompt: (targetValue: string) => void;
   handleSubmit: () => void;
 }
-function SearchPrompt({ placeholder, handleSubmit }: Props) {
-  const [prompt, setPrompt] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrompt(e.target.value);
-  };
-
+function SearchInput({ placeholder, prompt, setPrompt, handleSubmit }: Props) {
   return (
     <Field.Root>
       <Box
@@ -29,14 +24,14 @@ function SearchPrompt({ placeholder, handleSubmit }: Props) {
           className="peer"
           placeholder=""
           value={prompt}
-          onChange={handleInputChange}
+          onChange={(e) => setPrompt(e.target.value)}
         />
         <Field.Label css={floatingStyles}>{placeholder}</Field.Label>
         <Button
           border="none"
           variant="solid"
           size="sm"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           disabled={!prompt}
         >
           <FaArrowUp />
@@ -46,4 +41,4 @@ function SearchPrompt({ placeholder, handleSubmit }: Props) {
   );
 }
 
-export default SearchPrompt;
+export default SearchInput;
