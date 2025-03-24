@@ -30,7 +30,7 @@ function SearchInput({
         <Input
           className="peer"
           placeholder=""
-          // value={prompt}
+          value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           disabled={readOnly}
         />

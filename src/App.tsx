@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SearchInput from "./components/SearchInput";
@@ -23,9 +23,8 @@ function App() {
     <>
       <Grid
         h="100vh"
+        width={"100vw"}
         templateRows="repeat(7, 1fr)"
-        // templateColumns="repeat(5, 1fr)"
-        // gap={4}
         display={"grid"}
       >
         <MotionGridItem
@@ -58,7 +57,9 @@ function App() {
           display={resultReady ? "flex" : "none"}
           animate={{ height: resultReady ? "14.28vh" : "0vh" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-        >
+          alignItems={"center"}
+          justifyContent={"center"}
+>
            <SearchInput placeholder="Refine your search?" prompt={searchPrompt} handleSubmit={() => setSubmitted(true)} setPrompt={setSearchPrompt} />
         </MotionGridItem>
       </Grid>
