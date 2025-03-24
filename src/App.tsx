@@ -1,9 +1,10 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SearchInput from "./components/SearchInput";
 import ListCards from "./components/ListCards";
 import useSearchResults from "./hooks/useSearchResults";
+import ColorModeSwitch from "./components/ColorModeSwitch";
 
 const MotionGridItem = motion(GridItem);
 
@@ -21,6 +22,9 @@ function App() {
 
   return (
     <>
+    <Box position={"absolute"} right={3} top={3} >
+    <ColorModeSwitch singleIcon={true}  />
+    </Box>
       <Grid
         h="100vh"
         width={"100vw"}
