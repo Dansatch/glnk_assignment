@@ -1,4 +1,12 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  HStack,
+  Spinner,
+  VStack,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SearchInput from "./components/SearchInput";
@@ -12,7 +20,7 @@ const MotionGridItem = motion(GridItem);
 function App() {
   const [searchPrompt, setSearchPrompt] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const { data, error } = useSearchResults(searchPrompt);
+  const { data, error, loading } = useSearchResults(searchPrompt);
   const resultReady = searchPrompt[0] && submitted;
 
   useEffect(() => {
@@ -47,13 +55,45 @@ function App() {
               animate={{ height: resultReady ? "14.28vh" : "100vh" }} // Adjusted height per row
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              <SearchInput
-                placeholder="What can I find for you today?"
-                readOnly={!!resultReady}
-                prompt={searchPrompt}
-                handleSubmit={() => setSubmitted(true)}
-                setPrompt={setSearchPrompt}
-              />
+              <VStack
+                boxSize={"100%"}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                spaceY={2}
+              >
+                {loading ? (
+                  <Spinner size={"md"} color={"teal"} />
+                ) : (
+                  <HStack
+                    display={submitted ? "none" : "block"}
+                    fontSize={"sm"}
+                    spaceX={1}
+                    opacity={0.8}
+                  >
+                    {data?.suggestions.map((suggestion) => (
+                      <Button
+                        colorPalette="teal"
+                        variant="outline"
+                        onClick={() => {
+                          setSearchPrompt(suggestion);
+                          setSubmitted(true);
+                        }}
+                      >
+                        {suggestion}
+                      </Button>
+                    ))}
+                  </HStack>
+                )}
+
+                <SearchInput
+                  placeholder="What can I find for you today?"
+                  readOnly={!!resultReady}
+                  prompt={searchPrompt}
+                  handleSubmit={() => setSubmitted(true)}
+                  setPrompt={setSearchPrompt}
+                />
+              </VStack>
             </MotionGridItem>
 
             <MotionGridItem

@@ -117,7 +117,7 @@ export default {
     "Best practices for medical recruitment",
     "Recruiting physicians: What to know",
     "Top recruitment strategies for nurses",
-    "How to onboard new medical staff effectively",
-    "Key hiring challenges in the healthcare industry",
+    // "How to onboard new medical staff effectively",
+    // "Key hiring challenges in the healthcare industry",
   ],
 };
