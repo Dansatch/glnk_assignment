@@ -1,13 +1,11 @@
 import { Box, Button, Field, Input } from "@chakra-ui/react";
 import { FaArrowUp } from "react-icons/fa6";
 import { floatingStyles } from "../styles";
-import { RxReload } from "react-icons/rx";
 
 interface Props {
   placeholder: string;
   prompt: string;
   readOnly?: boolean;
-  iconType?: "go" | "reload";
   setPrompt: (targetValue: string) => void;
   handleSubmit: () => void;
 }
@@ -17,16 +15,14 @@ function SearchInput({
   setPrompt,
   handleSubmit,
   readOnly = false,
-  iconType = "go",
 }: Props) {
   return (
-    <Field.Root>
+    <Field.Root width="400px">
       <Box
         borderRadius={"md"}
         alignSelf={"center"}
         pos="relative"
         w="full"
-        maxW="400px"
         display={"flex"}
       >
         {" "}
@@ -56,7 +52,7 @@ function SearchInput({
             backgroundColor: "transparent",
           }}
         >
-          {iconType === "go" ? <FaArrowUp /> : <RxReload />}
+          <FaArrowUp />
         </Button>
       </Box>
     </Field.Root>

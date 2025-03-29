@@ -1,6 +1,6 @@
 import { Box, Link, Text, Flex } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
-import { Result } from "../hooks/useSearchResults";
+import { Result } from "../hooks/useChatbotResponse";
 import EmptyResult from "./EmptyResult";
 
 interface Props {
