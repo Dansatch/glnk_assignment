@@ -5,13 +5,16 @@ import {
   Grid,
   GridItem,
   HStack,
+  // SkeletonText,
+  Text,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import SearchInput from "./components/SearchInput";
-import { useChatbotResponse, useSuggestions } from "./hooks/useChatbotResponse";
 import ColorModeSwitch from "./components/ColorModeSwitch";
+import { useColorModeValue } from "./components/ui/color-mode";
+import { useChatbotResponse, useSuggestions } from "./hooks/useChatbotResponse";
 
 const MotionGridItem = motion(GridItem);
 const MotionVStack = motion(VStack);
@@ -20,16 +23,26 @@ function App() {
   const [searchPrompt, setSearchPrompt] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [messages, setMessages] = useState<
-    { role: "user" | "ai"; content: string }[]
+    { role: "user" | "ai"; content: string; timestamp: Date }[]
   >([]);
   const suggestions = useSuggestions();
   const resultReady = !!messages[0];
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (!searchPrompt[0]) return setSubmitted(false);
     if (!submitted) return;
 
-    setMessages([...messages, { role: "user", content: searchPrompt }]);
+    setMessages([
+      ...messages,
+      { role: "user", content: searchPrompt, timestamp: new Date() },
+    ]);
   }, [searchPrompt[0] && submitted]);
 
   useEffect(() => {
@@ -38,7 +51,11 @@ function App() {
     const result = useChatbotResponse(searchPrompt);
     setMessages((prev) => [
       ...prev,
-      { role: "ai", content: result.data || "No response found" },
+      {
+        role: "ai",
+        content: result.data || "No response found",
+        timestamp: new Date(),
+      },
     ]);
 
     setSearchPrompt("");
@@ -56,7 +73,7 @@ function App() {
           width={"100vw"}
           templateRows="repeat(7, 1fr)"
           display={"grid"}
-          paddingX={{ base: "1", md: "10" }}
+          paddingX={{ base: "4", md: "10" }}
         >
           <MotionGridItem
             rowSpan={7}
@@ -101,26 +118,71 @@ function App() {
           </MotionGridItem>
 
           <MotionGridItem
+            ref={scrollRef}
             rowSpan={0}
             display={resultReady ? "flex" : "none"}
+            alignItems={"center"}
+            justifyContent={"center"}
             animate={{ height: resultReady ? "85.71vh" : "0vh" }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             overflow={"scroll"}
-            paddingY={{ base: "1", md: "10" }}
+            paddingY={{ base: "5", md: "10" }}
           >
-            <VStack boxSize={"100%"}>
-              {messages.map((message, index) => (
-                <HStack key={index} width={"100%"}>
-                  <Avatar.Root size={"xs"} variant={"subtle"}>
-                    <Avatar.Fallback
-                      name={message.role === "ai" ? "A I" : ""}
-                    />
-                  </Avatar.Root>
-                  <Box>{message.content}</Box>
-                </HStack>
-              ))}
+            <VStack
+              height={"100%"}
+              display={"flex"}
+              alignItems={"center"}
+              width={{ base: "100%", md: "70vw" }}
+            >
+              <ul>
+                {messages.map((message, index) => (
+                  <li>
+                    <HStack
+                      key={index}
+                      paddingY={1}
+                      alignItems={"flex-start"}
+                      float={"left"}
+                      color={useColorModeValue("gray.600", "gray.400")}
+                    >
+                      <Avatar.Root
+                        size={"xs"}
+                        variant={"subtle"}
+                        colorPalette={message.role === "ai" ? "teal" : ""}
+                      >
+                        <Avatar.Fallback
+                          name={message.role === "ai" ? "A I" : ""}
+                        />
+                      </Avatar.Root>
+                      <Box>
+                        {/* <SkeletonText noOfLines={2} width={"600px"} /> */}
+                        <Text
+                          paddingY={1}
+                          paddingX={2}
+                          backgroundColor={useColorModeValue(
+                            "gray.200",
+                            "gray.800"
+                          )}
+                          fontFamily={"serif"}
+                          borderRadius={"sm"}
+                          maxWidth={{ base: "100%", md: "500px", lg: "600px" }}
+                          fontSize={"lg"}
+                        >
+                          {message.content}
+                        </Text>
+
+                        <Text fontSize={"2xs"} float={"right"} marginTop={"1"}>
+                          {message.timestamp.toLocaleTimeString("en-GB", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })}
+                        </Text>
+                      </Box>
+                    </HStack>
+                  </li>
+                ))}
+              </ul>
             </VStack>
-            {/* <ListCards data={data?.results} /> */}
           </MotionGridItem>
 
           <MotionGridItem

@@ -31,7 +31,7 @@ const useChatbotResponse = (query: string) => {
     );
   };
 
-  return { data: findClosestMatch(query).title || "" };
+  return { data: findClosestMatch(query).description || "" };
 };
 
 const useSuggestions = () => {
