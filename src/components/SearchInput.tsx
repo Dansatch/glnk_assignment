@@ -1,21 +1,20 @@
 import { Box, Button, Field, Input } from "@chakra-ui/react";
 import { FaArrowUp } from "react-icons/fa6";
 import { floatingStyles } from "../styles";
+import { useRef } from "react";
 
 interface Props {
   placeholder: string;
-  prompt: string;
   readOnly?: boolean;
   setPrompt: (targetValue: string) => void;
-  handleSubmit: () => void;
 }
-function SearchInput({
-  placeholder,
-  prompt,
-  setPrompt,
-  handleSubmit,
-  readOnly = false,
-}: Props) {
+function SearchInput({ placeholder, setPrompt, readOnly = false }: Props) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleSubmit = () => {
+    setPrompt(inputRef.current?.value || "");
+  };
+
   return (
     <Field.Root width={{ base: "80vw", md: "400px" }}>
       <Box
@@ -27,10 +26,9 @@ function SearchInput({
       >
         {" "}
         <Input
+          ref={inputRef}
           className="peer"
           placeholder=""
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
           disabled={readOnly}
         />
         <Field.Label
@@ -43,7 +41,7 @@ function SearchInput({
           border="none"
           size="sm"
           onClick={() => handleSubmit()}
-          disabled={!prompt}
+          // disabled={!prompt}
           display={readOnly ? "none" : "flex"}
           variant="ghost"
           marginLeft={-10}
