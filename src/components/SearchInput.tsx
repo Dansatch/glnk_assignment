@@ -16,7 +16,7 @@ function SearchInput({ placeholder, setPrompt, readOnly = false }: Props) {
   };
 
   return (
-    <Field.Root width={{ base: "80vw", md: "400px" }}>
+    <Field.Root width={{ base: "80vw", md: "400px", lg: "500px" }}>
       <Box
         borderRadius={"md"}
         alignSelf={"center"}
@@ -41,7 +41,6 @@ function SearchInput({ placeholder, setPrompt, readOnly = false }: Props) {
           border="none"
           size="sm"
           onClick={() => handleSubmit()}
-          // disabled={!prompt}
           display={readOnly ? "none" : "flex"}
           variant="ghost"
           marginLeft={-10}
