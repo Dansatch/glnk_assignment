@@ -17,7 +17,7 @@ function SearchInput({
   readOnly = false,
 }: Props) {
   return (
-    <Field.Root width="400px">
+    <Field.Root width={{ base: "80vw", md: "400px" }}>
       <Box
         borderRadius={"md"}
         alignSelf={"center"}

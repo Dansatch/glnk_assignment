@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Flex,
   Grid,
   GridItem,
   HStack,
@@ -79,32 +80,36 @@ function App() {
             rowSpan={7}
             display={"flex"}
             alignItems={"center"}
+            justifyContent={"center"}
             animate={{
               height: resultReady ? "0vh" : "100vh",
             }} // Adjusted height per row
             transition={{ duration: 0.5, ease: "easeInOut" }}
+            maxWidth={"100vw"}
           >
             <MotionVStack
-              boxSize={"100%"}
+              boxSize={"80%"}
               display={resultReady ? "none" : "flex"}
               alignItems={resultReady ? "flex-start" : "center"}
               justifyContent={"center"}
             >
-              <HStack fontSize={"sm"} spaceX={1} opacity={0.8}>
-                {suggestions.map((suggestion, index) => (
-                  <Button
-                    key={index}
-                    colorPalette="teal"
-                    variant="outline"
-                    onClick={() => {
-                      setSearchPrompt(suggestion);
-                      setSubmitted(true);
-                    }}
-                  >
-                    {suggestion}
-                  </Button>
-                ))}
-              </HStack>
+              <Box fontSize={"sm"} spaceX={1} opacity={0.8}>
+                <Flex wrap={"wrap"} justifyContent={"center"} gap={2}>
+                  {suggestions.map((suggestion, index) => (
+                    <Button
+                      key={index}
+                      colorPalette="teal"
+                      variant="outline"
+                      onClick={() => {
+                        setSearchPrompt(suggestion);
+                        setSubmitted(true);
+                      }}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </Flex>
+              </Box>
               {/* )} */}
 
               <SearchInput
@@ -126,7 +131,7 @@ function App() {
             animate={{ height: resultReady ? "85.71vh" : "0vh" }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             overflow={"scroll"}
-            paddingY={{ base: "5", md: "10" }}
+            paddingY={{ base: "8", md: "10" }}
           >
             <VStack
               height={"100%"}
@@ -136,9 +141,8 @@ function App() {
             >
               <ul>
                 {messages.map((message, index) => (
-                  <li>
+                  <li key={index}>
                     <HStack
-                      key={index}
                       paddingY={1}
                       alignItems={"flex-start"}
                       float={"left"}
